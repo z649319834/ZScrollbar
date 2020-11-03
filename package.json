@@ -1,0 +1,31 @@
+{
+  "name": "z-scrollbar",
+  "version": "1.0.0",
+  "description": "自定义滚动条",
+  "main": "dist/scrollbar.umd.min.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "serve": "vue serve ./index.vue",
+    "build": "vue build -t lib -n scrollbar './index.js'",
+    "prepublishOnly": "npm run build",
+    "postpublish": "git push && git push origin --tags"
+  },
+  "repository": {
+    "type": "gitlab",
+    "url": "https://github.com/z649319834/ZScrollbar.git"
+  },
+  "keywords": [
+    "vue",
+    "vuejs",
+    "component",
+    "scrollbar"
+  ],
+  "author": "zhongchengzuo",
+  "license": "ISC",
+  "dependencies": {
+    "element-resize-detector": "^1.2.1"
+  }
+}
