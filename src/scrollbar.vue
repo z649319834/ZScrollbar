@@ -9,14 +9,11 @@
       @scroll.stop="onScroll"
     >
       <!-- 视图元素 此元素 >= 内容元素的宽高 -->
-      <div
-        class="happy-scroll-content"
-        ref="content"
-        :style="[contentBorderStyle]"
-      >
-        <!-- 用户的内容元素 -->
+      <!-- <div class="happy-scroll-content" ref="content">
         <slot></slot>
-      </div>
+      </div> -->
+      <!-- 用户的内容元素 -->
+      <slot></slot>
     </div>
     <!-- 竖向垂直滚动条 -->
     <happy-scroll-strip
@@ -392,10 +389,10 @@ export default {
   overflow: auto;
 } */
 
-.happy-scroll-container .happy-scroll-content {
-  /* 解决横向滚动差 20px 的问题 */
-  display: inline-block;
-}
+/* .happy-scroll-container .happy-scroll-content { */
+/* 解决横向滚动差 20px 的问题 */
+/* display: inline-block; */
+/* } */
 .happy-scroll:hover .hover {
   opacity: 1;
   will-change: opacity;
