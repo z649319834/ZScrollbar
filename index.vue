@@ -26,9 +26,16 @@
       >
         滚动条color
       </button>
+      <button :class="['btn']" @click="onScrollTop">
+        竖式回到顶部
+      </button>
+      <button :class="['btn']" @click="onScrollLeft">
+        水平回到顶部
+      </button>
     </div>
     <div class="container">
       <z-scrollbar
+        ref="scrollbar"
         size="6"
         :min-length-v="0.15"
         right
@@ -140,6 +147,14 @@ export default {
         (function(color) {
           return new Array(7 - color.length).join('0') + color
         })(((Math.random() * 0x1000000) | 0).toString(16))
+    },
+    onScrollTop() {
+      const { scrollbar } = this.$refs
+      scrollbar.resetScrollTop(0)
+    },
+    onScrollLeft() {
+      const { scrollbar } = this.$refs
+      scrollbar.resetScrollLeft(0)
     }
   }
 }

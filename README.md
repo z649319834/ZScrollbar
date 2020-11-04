@@ -399,7 +399,7 @@ yarn add ZScrollbar
 
   设置鼠标拖动滚动条的节流时间，如果没有特殊的要求不建议修改此值。
 
-## 事件
+## Events
 
 ### horizontal-start
 
@@ -471,3 +471,13 @@ yarn add ZScrollbar
     <!-- 你的内容 -->
   </z-scrollbar>
   ```
+
+## Methods
+
+### resetScrollTop 设置垂直方向滚动条位置
+
+- 参数 num 默认值为 0
+
+### resetScrollLeft 设置水平方向滚动条位置
+
+- 参数 num 默认值为 0

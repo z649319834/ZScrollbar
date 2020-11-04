@@ -333,6 +333,16 @@ export default {
         // eslint-disable-next-line
         this.isScrollNotUseSpace = Vue._happyJS._isScrollNotUseSpace
       }
+    },
+    // 重置竖式滚动条位置
+    resetScrollTop(num = 0) {
+      this.moveY = num
+      this.$refs.container.scrollTop = num
+    },
+    // 重置水平滚动条位置
+    resetScrollLeft(num = 0) {
+      this.moveX = num
+      this.$refs.container.scrollLeft = num
     }
   },
   beforeCreate() {
