@@ -1,6 +1,6 @@
 {
   "name": "z-scrollbar",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "自定义滚动条",
   "main": "dist/scrollbar.umd.min.js",
   "files": [
