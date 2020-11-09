@@ -1,13 +1,12 @@
 <template>
   <!-- 此元素负责覆盖原生的滚动条 -->
-  <div class="happy-scroll" ref="happy-scroll">
+  <div class="happy-scroll"
+    ref="happy-scroll">
     <!-- 出现滚动条的元素 -->
-    <div
-      class="happy-scroll-container"
+    <div class="happy-scroll-container"
       ref="container"
       :style="[overflowStyle, initSize]"
-      @scroll.stop="onScroll"
-    >
+      @scroll.stop="onScroll">
       <!-- 视图元素 此元素 >= 内容元素的宽高 -->
       <!-- <div class="happy-scroll-content" ref="content">
         <slot></slot>
@@ -16,20 +15,17 @@
       <slot></slot>
     </div>
     <!-- 竖向垂直滚动条 -->
-    <happy-scroll-strip
-      ref="stripY"
+    <happy-scroll-strip ref="stripY"
       v-if="!hideVertical"
       v-bind="$attrs"
       v-on="$listeners"
       :hoverScroll="hoverScroll"
       :throttle="throttle"
       :move="moveY"
-      @change="slideYChange"
-    >
+      @change="slideYChange">
     </happy-scroll-strip>
     <!-- 横向水平滚动条 -->
-    <happy-scroll-strip
-      ref="stripX"
+    <happy-scroll-strip ref="stripX"
       v-if="!hideHorizontal"
       horizontal
       v-bind="$attrs"
@@ -37,20 +33,19 @@
       :hoverScroll="hoverScroll"
       :throttle="throttle"
       :move="moveX"
-      @change="slideXChange"
-    >
+      @change="slideXChange">
     </happy-scroll-strip>
   </div>
 </template>
 <script>
-import Vue from 'vue'
-import { generateThrottle, debounce } from './util'
-import HappyScrollStrip from './strip.vue'
+import Vue from "vue";
+import { generateThrottle, debounce } from "./util";
+import HappyScrollStrip from "./strip.vue";
 // @FIXME 需要一个更优的解决方案
-import ElementResizeDetectorMaker from 'element-resize-detector'
+import ElementResizeDetectorMaker from "element-resize-detector";
 
 export default {
-  name: 'ZScrollbar',
+  name: "ZScrollbar",
   inheritAttrs: false,
   components: {
     HappyScrollStrip
@@ -80,20 +75,20 @@ export default {
     // (当resize=true时生效)当视图宽高变小时(内容减少) 滚动条移动到 -> start(竖向时表示最上边，横向时表示最左边)、end、默认保持不变
     smallerMoveH: {
       type: String,
-      default: ''
+      default: ""
     },
     smallerMoveV: {
       type: String,
-      default: ''
+      default: ""
     },
     // (当resize=true时生效)当视图宽高变大时(内容增多)
     biggerMoveH: {
       type: String,
-      default: ''
+      default: ""
     },
     biggerMoveV: {
       type: String,
-      default: ''
+      default: ""
     },
     // 是否hover显示滚动条
     hoverScroll: {
@@ -116,27 +111,27 @@ export default {
       browserVSize: 0,
       // 滚动条的模式，表示占用宽度还是悬浮在元素上(macOS系统可以设置滚动条悬浮在元素上，不会占用元素的空间)
       isScrollNotUseSpace: undefined
-    }
+    };
   },
   watch: {
     // 监听（鼠标滑轮或者触摸板滑动） 滑动到指定位置
     scrollTop(newVal) {
-      this.$refs.container.scrollTop = this.moveY = +newVal
+      this.$refs.container.scrollTop = this.moveY = +newVal;
     },
     scrollLeft(newVal) {
-      this.$refs.container.scrollLeft = this.moveX = +newVal
+      this.$refs.container.scrollLeft = this.moveX = +newVal;
     },
     // 监听动态开启或关闭对应的滚动条
     hideVertical(newVal) {
       if (!newVal) {
         // 如果将禁用修改为启用，等子组件渲染后 再计算比例
-        this.$nextTick(this.computeStripY)
+        this.$nextTick(this.computeStripY);
       }
     },
     hideHorizontal(newVal) {
       if (!newVal) {
         // 如果将禁用修改为启用，等子组件渲染后 再计算比例
-        this.$nextTick(this.computeStripX)
+        this.$nextTick(this.computeStripX);
       }
     }
   },
@@ -144,175 +139,178 @@ export default {
     // content 元素的border样式
     contentBorderStyle() {
       if (this.isScrollNotUseSpace === undefined) {
-        return {}
+        return {};
       }
       return {
-        'border-right': `${10 - this.browserHSize}px solid transparent`,
-        'border-bottom': `${10 - this.browserVSize}px solid transparent`
-      }
+        "border-right": `${10 - this.browserHSize}px solid transparent`,
+        "border-bottom": `${10 - this.browserVSize}px solid transparent`
+      };
     },
     // 内容的overflow样式
     overflowStyle() {
       return {
-        'overflow-x': this.hideHorizontal ? 'hidden' : 'auto',
-        'overflow-y': this.hideVertical ? 'hidden' : 'auto'
-      }
+        "overflow-x": this.hideHorizontal ? "hidden" : "auto",
+        "overflow-y": this.hideVertical ? "hidden" : "auto"
+      };
     }
   },
   methods: {
     // 模拟的滚动条位置发生了变动，修改 dom 对应的位置
     slideYChange(newVal) {
-      this.$refs.container.scrollTop = newVal
+      this.$refs.container.scrollTop = newVal;
       // this.$refs.container.scrollTop 会在渲染之后被自动调整，所以这里重新取值
-      this.$emit('update:scrollTop', this.$refs.container.scrollTop)
+      this.$emit("update:scrollTop", this.$refs.container.scrollTop);
     },
     slideXChange(newVal) {
-      this.$refs.container.scrollLeft = newVal
-      this.$emit('update:scrollLeft', this.$refs.container.scrollLeft)
+      this.$refs.container.scrollLeft = newVal;
+      this.$emit("update:scrollLeft", this.$refs.container.scrollLeft);
     },
     updateSyncScroll: debounce(function() {
-      this.$emit('update:scrollTop', this.moveY)
-      this.$emit('update:scrollLeft', this.moveX)
+      this.$emit("update:scrollTop", this.moveY);
+      this.$emit("update:scrollLeft", this.moveX);
     }, 50),
     // 监听dom元素的滚动事件，通知strip，将bar移动到对应位置
     onScroll(e) {
       // 节流
-      if (!this.scrollThrottle(Date.now())) return false
-      this.moveY = e.target.scrollTop
-      this.moveX = e.target.scrollLeft
-      this.updateSyncScroll()
-      this.$emit('scroll', { y: this.moveY, x: this.moveX })
+      if (!this.scrollThrottle(Date.now())) return false;
+      this.moveY = e.target.scrollTop;
+      this.moveX = e.target.scrollLeft;
+      this.updateSyncScroll();
+      this.$emit("scroll", { y: this.moveY, x: this.moveX });
     },
     // 初始化，获取浏览器滚动条的大小
     initBrowserSize() {
       if (this.isScrollNotUseSpace === undefined) {
-        return
+        return;
       }
 
       if (this.isScrollNotUseSpace === true) {
-        this.browserHSize = 0
-        this.browserVSize = 0
+        this.browserHSize = 0;
+        this.browserVSize = 0;
       } else {
         // 获取当前浏览器滚动条的宽高
         this.browserHSize =
-          this.$refs.container.offsetWidth - this.$refs.container.clientWidth
+          this.$refs.container.offsetWidth - this.$refs.container.clientWidth;
         // 横向滚动的高度
         this.browserVSize =
-          this.$refs.container.offsetHeight - this.$refs.container.clientHeight
+          this.$refs.container.offsetHeight - this.$refs.container.clientHeight;
       }
     },
     // 计算横向滚动条宽度度与元素宽度百分比
     computeStripX() {
       if (this.hideHorizontal) {
         // 没有开启横向滚动条
-        return
+        return;
       }
-      const clientEle = this.$refs['happy-scroll']
-      const slotEle = this.$slots.default[0]['elm']
-      this.$refs.stripX.computeStrip(slotEle.scrollWidth, clientEle.clientWidth)
+      const clientEle = this.$el;
+      const slotEle = this.$slots.default[0]["elm"];
+      this.$refs.stripX.computeStrip(
+        slotEle.scrollWidth,
+        clientEle.clientWidth
+      );
     },
     // 计算横向滚动条高度与元素高度百分比
     computeStripY() {
       if (this.hideVertical) {
         // 没有开启竖向滚动条
-        return
+        return;
       }
-      const clientEle = this.$refs['happy-scroll']
-      const slotEle = this.$slots.default[0]['elm']
+      const clientEle = this.$el;
+      const slotEle = this.$slots.default[0]["elm"];
       // 竖向滚动条高度与元素高度百分比
       this.$refs.stripY.computeStrip(
         slotEle.scrollHeight,
         clientEle.clientHeight
-      )
+      );
     },
     // slot视图大小变化时的监听
     resizeListener() {
       // 没开启监听reszie方法
-      if (!this.resize) return
+      if (!this.resize) return;
 
       // 监听slot视图元素resize
       let elementResizeDetector = ElementResizeDetectorMaker({
-        strategy: 'scroll',
+        strategy: "scroll",
         callOnAdd: false
-      })
+      });
 
       // 记录视图上次宽高的变化
-      const ele = this.$slots.default[0]['elm']
-      let lastHeight = ele.clientHeight
-      let lastWidth = ele.clientWidth
+      const ele = this.$slots.default[0]["elm"];
+      let lastHeight = ele.clientHeight;
+      let lastWidth = ele.clientWidth;
       elementResizeDetector.listenTo(ele, element => {
         // 初始化百分比
-        this.computeStripX()
-        this.computeStripY()
-        this.initBrowserSize()
+        this.computeStripX();
+        this.computeStripY();
+        this.initBrowserSize();
         // 获取竖向滚动条变小或者变大的移动策略
-        let moveTo
+        let moveTo;
         if (element.clientHeight < lastHeight) {
           // 高度变小
-          moveTo = this.smallerMoveH.toLocaleLowerCase()
+          moveTo = this.smallerMoveH.toLocaleLowerCase();
         }
         if (element.clientHeight > lastHeight) {
           // 高度变大
-          moveTo = this.biggerMoveH.toLocaleLowerCase()
+          moveTo = this.biggerMoveH.toLocaleLowerCase();
         }
 
-        if (moveTo === 'start') {
+        if (moveTo === "start") {
           // 竖向滚动条移动到顶部
-          this.moveY = 0
-          this.slideYChange(this.moveY)
+          this.moveY = 0;
+          this.slideYChange(this.moveY);
         }
-        if (moveTo === 'end') {
+        if (moveTo === "end") {
           // 竖向滚动条移动到底部
-          this.moveY = element.clientHeight
-          this.slideYChange(this.moveY)
+          this.moveY = element.clientHeight;
+          this.slideYChange(this.moveY);
         }
 
         // 记录此次的高度，用于下次变化后的比较
-        lastHeight = element.clientHeight
+        lastHeight = element.clientHeight;
 
         // 获取横向向滚动条变小或者变大的移动策略
-        moveTo = ''
+        moveTo = "";
         if (element.clientWidth < lastWidth) {
           // 宽度变小
-          moveTo = this.smallerMoveV.toLocaleLowerCase()
+          moveTo = this.smallerMoveV.toLocaleLowerCase();
         }
         if (element.clientWidth > lastWidth) {
           // 宽度变大
-          moveTo = this.biggerMoveV.toLocaleLowerCase()
+          moveTo = this.biggerMoveV.toLocaleLowerCase();
         }
-        if (moveTo === 'start') {
+        if (moveTo === "start") {
           // 横向滚动条移动到最左边
-          this.moveX = 0
-          this.slideXChange(this.moveX)
+          this.moveX = 0;
+          this.slideXChange(this.moveX);
         }
-        if (moveTo === 'end') {
+        if (moveTo === "end") {
           // 竖向滚动条移动到最右边
-          this.moveX = element.clientWidth
-          this.slideXChange(this.moveX)
+          this.moveX = element.clientWidth;
+          this.slideXChange(this.moveX);
         }
 
         // 记录此次的宽度，用于下次变化后的比较
-        lastWidth = element.clientWidth
-      })
+        lastWidth = element.clientWidth;
+      });
     },
     // 设置滚动条元素的宽度
     setContainerSize() {
       // 根据最外层div，初始化内部容器的宽高，包含滚动条的宽高
       this.initSize = {
-        width: this.$refs['happy-scroll'].clientWidth + 'px',
-        height: this.$refs['happy-scroll'].clientHeight + 'px'
-      }
+        width: this.$el.clientWidth + "px",
+        height: this.$el.clientHeight + "px"
+      };
     },
     // 判断浏览器滚动条的模式
     checkScrollMode() {
       // eslint-disable-next-line
       if (Vue._happyJS._isScrollNotUseSpace !== undefined) {
         // 如果不是undefined，说明已经判断过了
-        return
+        return;
       }
 
-      const ele = this.$slots.default[0]['elm']
-      const container = this.$refs.container
+      const ele = this.$slots.default[0]["elm"];
+      const container = this.$refs.container;
       // 如果视图元素的实际高度(宽度)大于可视高度(宽度)，则可以肯定会出现滚动条了，否则还没有出现，不做判断
       if (
         ele.offsetHeight > container.clientHeight ||
@@ -325,64 +323,63 @@ export default {
         ) {
           // 滚动条一直存在的模式
           // eslint-disable-next-line
-          Vue._happyJS._isScrollNotUseSpace = false
+          Vue._happyJS._isScrollNotUseSpace = false;
         } else {
           // eslint-disable-next-line
-          Vue._happyJS._isScrollNotUseSpace = true
+          Vue._happyJS._isScrollNotUseSpace = true;
         }
         // eslint-disable-next-line
-        this.isScrollNotUseSpace = Vue._happyJS._isScrollNotUseSpace
+        this.isScrollNotUseSpace = Vue._happyJS._isScrollNotUseSpace;
       }
     },
     // 重置竖式滚动条位置
     resetScrollTop(num = 0) {
-      this.moveY = num
-      this.$refs.container.scrollTop = num
+      this.moveY = num;
+      this.$refs.container.scrollTop = num;
     },
     // 重置水平滚动条位置
     resetScrollLeft(num = 0) {
-      this.moveX = num
-      this.$refs.container.scrollLeft = num
+      this.moveX = num;
+      this.$refs.container.scrollLeft = num;
     }
   },
   beforeCreate() {
     // eslint-disable-next-line
-    const happyJS = (Vue._happyJS = Vue._happyJS || {})
+    const happyJS = (Vue._happyJS = Vue._happyJS || {});
     /**
      * 判断当前浏览器滚动条存在的方式
      * true. 滚动时滚动条才会出现，悬浮在元素之上，不占用宽度(默认为此模式，但可以通过css隐藏滚动条，也属于不占用空间的模式，不过Firefox除外)
      * false. 系统滚动条始终存在，所以会占用宽度 (占用视图宽度的模式，windows下默认为此方式)
      */
-    this.isScrollNotUseSpace = happyJS._isScrollNotUseSpace
+    this.isScrollNotUseSpace = happyJS._isScrollNotUseSpace;
   },
   mounted() {
-    // 计算最外层宽高，设置滚动条元素的宽高
-    this.setContainerSize()
-    this.$nextTick(() => {
-      // 使滚动条进行计算比例
-      this.computeStripX()
-      this.computeStripY()
-      // 判断当前浏览器滚动条的模式，依据slot元素高度，如果高度大于视图高度，则出现滚动条了，此时再判断滚动条的模式
-      this.checkScrollMode()
-      // 获取当前浏览器滚动条的宽高
-      this.initBrowserSize()
-
-      this.$nextTick(() => {
-        // 因为 initBrowserSize 会有增加 20px border 的操作，所以需要等待这20px渲染完成后再进行操作
-        // 将视图dom移动到设定的位置
-        this.scrollTop && (this.$refs.container.scrollTop = +this.scrollTop)
-        this.scrollLeft && (this.$refs.container.scrollLeft = +this.scrollLeft)
-      })
-    })
-
     // 监听slot视图变化, 方法内部会判断是否设置了开启监听resize
-    this.resizeListener()
+    this.resizeListener();
+
+    this.$nextTick(() => {
+      console.log(this.$el.offsetWidth);
+      // 计算最外层宽高，设置滚动条元素的宽高
+      this.setContainerSize();
+      // 使滚动条进行计算比例
+      this.computeStripX();
+      this.computeStripY();
+      // 判断当前浏览器滚动条的模式，依据slot元素高度，如果高度大于视图高度，则出现滚动条了，此时再判断滚动条的模式
+      this.checkScrollMode();
+      // 获取当前浏览器滚动条的宽高
+      this.initBrowserSize();
+
+      // 因为 initBrowserSize 会有增加 20px border 的操作，所以需要等待这20px渲染完成后再进行操作
+      // 将视图dom移动到设定的位置
+      this.scrollTop && (this.$refs.container.scrollTop = +this.scrollTop);
+      this.scrollLeft && (this.$refs.container.scrollLeft = +this.scrollLeft);
+    });
 
     // 监听滚动条宽度变化，有滚动条 -> 无滚动条, 在mounted中监听是为了确保$refs可调用
-    this.$watch('browserHSize', this.setContainerSize)
-    this.$watch('browserVSize', this.setContainerSize)
+    this.$watch("browserHSize", this.setContainerSize);
+    this.$watch("browserVSize", this.setContainerSize);
   }
-}
+};
 </script>
 <style scoped>
 .happy-scroll {
@@ -395,9 +392,10 @@ export default {
 .happy-scroll-container::-webkit-scrollbar {
   display: none;
 }
-/* .happy-scroll-container {
-  overflow: auto;
-} */
+.happy-scroll-container {
+  min-width: 100%;
+  min-height: 100%;
+}
 
 /* .happy-scroll-container .happy-scroll-content { */
 /* 解决横向滚动差 20px 的问题 */
